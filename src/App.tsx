@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { selected$, pokemon$, deck$ } from "./store";
+import { PokemonProvider, usePokemon } from "./store";
 import { useObservableState } from "observable-hooks";
 
 const Deck: React.FC = () => {
+  const { deck$ } = usePokemon();
   const deck = useObservableState(deck$, []);
   return (
     <div>
@@ -25,6 +26,7 @@ const Deck: React.FC = () => {
 };
 
 const Search: React.FC = () => {
+  const { pokemon$, selected$ } = usePokemon();
   const [search, setSearch] = useState("");
   const pokemon = useObservableState(pokemon$, []);
 
@@ -65,15 +67,17 @@ const Search: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-      }}
-    >
-      <Search />
-      <Deck />
-    </div>
+    <PokemonProvider>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+        }}
+      >
+        <Search />
+        <Deck />
+      </div>
+    </PokemonProvider>
   );
 };
 

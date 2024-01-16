@@ -1,3 +1,4 @@
+import { createContext, useContext } from "react";
 import { BehaviorSubject, combineLatestWith, map } from "rxjs";
 
 export interface Pokemon {
@@ -54,3 +55,25 @@ fetch("/pokemon-simplified.json")
   .then((pokemon) => {
     rawPokemon$.next(pokemon);
   });
+
+const PokemonContext = createContext({
+  pokemon$,
+  selected$,
+  deck$,
+});
+
+export const usePokemon = () => useContext(PokemonContext);
+
+export const PokemonProvider: React.FC<React.PropsWithChildren<{}>> = ({
+  children,
+}) => (
+  <PokemonContext.Provider
+    value={{
+      pokemon$,
+      selected$,
+      deck$,
+    }}
+  >
+    {children}
+  </PokemonContext.Provider>
+);
